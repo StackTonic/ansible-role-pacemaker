@@ -1,0 +1,32 @@
+---
+- name: Enable a RHSM repository
+  community.general.rhsm_repository:
+    name: rhel-8-for-x86_64-highavailability-rpms
+  when:  (ansible_facts['distribution'] == "RedHat" and ansible_facts['distribution_major_version'] == "8")
+
+- name: Install the latest version of pacemaker corosync pcs
+  ansible.builtin.package:
+    name:
+      - pacemaker
+      - corosync
+      - pcs
+      - resource-agents
+    state: latest
+
+- name: Open Firewall
+  ansible.posix.firewalld:
+    service: high-availability
+    permanent: yes
+    immediate: true
+    state: enabled
+
+- name: Add hosts to /etc/hosts (using default (GW) IPv4 address)
+  lineinfile:
+    dest: '/etc/hosts'
+    regexp: "{{ hostvars[item]['ansible_default_ipv4']['address'] }} "
+    line: >
+      {{ hostvars[item]['ansible_default_ipv4']['address'] }}
+      {{ hostvars[item]['ansible_fqdn'] }}
+      {{ hostvars[item]['ansible_hostname'] }}
+    mode: '0644'
+  with_items: "{{ ansible_play_hosts_all }}"

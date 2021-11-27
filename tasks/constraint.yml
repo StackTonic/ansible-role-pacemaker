@@ -6,15 +6,22 @@
       {%  if pcmk_constraint.type == 'location' %}
       {%    set arg1 = pcmk_constraint['rsc'] %}
       {%    set arg2 = pcmk_constraint['node'] %}
+      {%    set arg3 = pcmk_constraint['score'] %}
       {%  elif pcmk_constraint.type == 'colocation' %}
       {%    set arg1 = pcmk_constraint['rsc'] %}
       {%    set arg2 = pcmk_constraint['with-rsc'] %}
+      {%    set arg3 = pcmk_constraint['score'] %}
+      {%  elif pcmk_constraint.type == 'order' %}
+      {%    set arg1 = pcmk_constraint['first'] %}
+      {%    set arg2 = pcmk_constraint['then'] %}
+      {%    set arg3 = pcmk_constraint['kind'] %}
       {%  else %}
       {%    set arg1 = pcmk_constraint['first'] %}
       {%    set arg2 = pcmk_constraint['then'] %}
+      {%    set arg3 = pcmk_constraint['score'] %}
       {%  endif -%}
       {{  '/cib/configuration/constraints/rsc_%(type)s[@id="%(type)s-%(arg1)s-%(arg2)s-%(score)s"]'
-      | format(type = pcmk_constraint.type, arg1 = arg1, arg2 = arg2, score = pcmk_constraint.score) }}
+      | format(type = pcmk_constraint.type, arg1 = arg1, arg2 = arg2, score = arg3) }}
   check_mode: false
 
 - name: Set pcmk_constraint properties
@@ -24,15 +31,22 @@
       {%  if pcmk_constraint.type == 'location' %}
       {%    set arg1 = pcmk_constraint['rsc'] %}
       {%    set arg2 = pcmk_constraint['node'] %}
+      {%    set arg3 = pcmk_constraint['score'] %}
       {%  elif pcmk_constraint.type == 'colocation' %}
       {%    set arg1 = pcmk_constraint['rsc'] %}
       {%    set arg2 = pcmk_constraint['with-rsc'] %}
+      {%    set arg3 = pcmk_constraint['score'] %}
+      {%  elif pcmk_constraint.type == 'order' %}
+      {%    set arg1 = pcmk_constraint['first'] %}
+      {%    set arg2 = pcmk_constraint['then'] %}
+      {%    set arg3 = pcmk_constraint['kind'] %}
       {%  else %}
       {%    set arg1 = pcmk_constraint['first'] %}
       {%    set arg2 = pcmk_constraint['then'] %}
+      {%    set arg3 = pcmk_constraint['score'] %}
       {%  endif -%}
       {{  '/cib/configuration/constraints/rsc_%(type)s[@id="%(type)s-%(arg1)s-%(arg2)s-%(score)s"]'
-      | format(type = pcmk_constraint.type, arg1 = arg1, arg2 = arg2, score = pcmk_constraint.score) }}
+      | format(type = pcmk_constraint.type, arg1 = arg1, arg2 = arg2, score = arg3) }}
     attribute: "{{ attr_name }}"
     value: |-
       {%  if pcmk_constraint[attr_name] is sameas(true) %}

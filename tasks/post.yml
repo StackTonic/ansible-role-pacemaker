@@ -13,7 +13,7 @@
     path: "{{ pcmk_config.path }}"
     xpath: /cib
     attribute: admin_epoch
-    content: attribute
+    value: attribute
   register: xml_result
   when: before.stat.checksum != after.stat.checksum
   changed_when: false
